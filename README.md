@@ -17,15 +17,7 @@ npm run build
 
 ## Deploy
 
-Push to `main` — the GitHub Actions workflow builds and deploys to Cloudflare Pages automatically.
-
-### Required GitHub Repository Secrets
-
-| Secret | Description |
-|---|---|
-| `CF_API_TOKEN` | Cloudflare API token with Pages permissions |
-| `CF_ACCOUNT_ID` | Your Cloudflare account ID |
-| `CF_PROJECT_NAME` | The Cloudflare Pages project name |
+This site is deployed automatically via Cloudflare Workers. Push to `main` and Cloudflare will build and deploy the site.
 
 ## Contributing
 
