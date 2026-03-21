@@ -45,12 +45,12 @@ export default function Home() {
         <div style={{display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem'}}>
           <Feature
             title="G Series Guides"
-            description="Detailed coding guides for G20, G30, G05, G80, G70 and more — organized by chassis."
+            description="Detailed coding guides for G20, G30, G05, G80, G70 and more, organized by chassis."
             link="/docs/g-series/overview"
           />
           <Feature
             title="Coding Tools"
-            description="Setup guides for BimmerCode, E-Sys, and xHP Flasher — from beginner to advanced."
+            description="Setup guides for BimmerCode, E-Sys, and xHP Flasher, from beginner to advanced."
             link="/docs/tools/bimmercode"
           />
           <Feature

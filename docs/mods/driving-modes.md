@@ -4,57 +4,48 @@ title: Driving Mode Displays
 sidebar_position: 5
 ---
 
-# Sport Displays & Driving Mode Customization
+# Sport Displays and Driving Mode Customization
 
-Coding can unlock sport-oriented displays, gauges, and mode behaviors across all driving modes.
+You can code your car to show sport-oriented instrument layouts and change how driving modes behave.
 
 ## What You Can Change
 
-### Sport Instrument Cluster Layout
-- Enable the **sport gauge layout** (with central tachometer) in Comfort and Eco Pro modes — not just Sport/Sport+
-- Show **boost pressure**, **oil temperature**, or **power/torque gauges** in all modes
+### Sport Gauge Layout
+By default, the sport instrument layout (with the central tachometer) only shows up in Sport and Sport+ modes. You can code it to appear in Comfort and Eco Pro too.
 
-### M Performance / M Sport Displays
-- Enable **M-style** gauges on non-M cars with the M Sport package
-- Unlock **digital G-force meter** display
-- Show **M lap timer** (on M cars)
+### Additional Gauges
+Some cars can show boost pressure, oil temperature, or power/torque readouts. Whether these are available depends on your specific cluster hardware.
 
 ### Mode Memory
-- Default to **Sport mode** on startup instead of Comfort
-- Remember the last selected **Individual mode** configuration
+You can set the car to start up in Sport mode instead of Comfort, or have it remember whichever Individual mode configuration you last used.
 
 ## How to Code It
 
 ### BimmerCode
 
 1. Connect and select **HU_MGU** (Head Unit)
-2. Look for:
-   - **"Sport displays in all modes"** → Enabled
-   - **"Default driving mode"** → Sport / Last state
-   - **"Sport gauges"** → aktiv
-3. Code the module
+2. Look for options related to sport displays, default driving mode, and sport gauges
+3. Enable the ones you want
+4. Code the module
 
 ### E-Sys
 
 1. Read the **HU_MGU** module
-2. FDL parameters:
-   - `SPORT_ANZEIGE_ALLE_FAHRMODI` → `aktiv`
-   - `FAHRMODUS_DEFAULT` → `sport` or `letzter_zustand`
-   - `M_LAPTIMER` → `aktiv` (M cars)
+2. Look for sport display and driving mode parameters in the FDL Editor
 3. Code the module
 
 ## Applies To
 
-| Chassis | Sport Displays | Mode Memory | M Gauges |
-|---------|---------------|-------------|----------|
-| G20 | Yes | Yes | M Sport pkg |
-| G30 | Yes | Yes | M Sport pkg |
-| G05/G06/G07 | Yes | Yes | M Sport pkg |
-| G80/G82 | Already enabled | Yes | Standard |
-| G70 | Yes | Yes | Varies |
+| Chassis | Sport Displays | Mode Memory |
+|---------|---------------|-------------|
+| G20 | Yes | Yes |
+| G30 | Yes | Yes |
+| G05/G06/G07 | Yes | Yes |
+| G80/G82 | Already enabled | Yes |
+| G70 | Yes | Yes |
 
 ## Notes
 
-- Driving mode memory may reset if the battery is disconnected
-- On M cars, the **M1/M2** button memory is separate from general driving mode memory
-- These changes are purely display/preference — they don't affect engine or suspension behavior beyond what the mode itself does
+- Driving mode memory may reset if the battery gets disconnected
+- On M cars, the M1/M2 button memory is separate from the general driving mode setting
+- These changes affect what you see on screen and which mode starts by default. They don't change the actual behavior of the engine or suspension beyond what the selected mode already does.
