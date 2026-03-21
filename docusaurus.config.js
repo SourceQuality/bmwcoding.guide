@@ -62,6 +62,7 @@ const config = {
             title: 'Tools',
             items: [
               { label: 'BimmerCode', to: '/docs/tools/bimmercode' },
+              { label: 'BimmerUtility', to: '/docs/tools/bimmerutility' },
               { label: 'E-Sys', to: '/docs/tools/esys' },
             ],
           },

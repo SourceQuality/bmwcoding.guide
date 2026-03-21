@@ -20,6 +20,7 @@ const sidebars = {
       label: 'Coding Tools',
       items: [
         'tools/bimmercode',
+        'tools/bimmerutility',
         'tools/esys',
         'tools/xhp-flasher',
       ],
@@ -30,8 +31,6 @@ const sidebars = {
       items: [
         'mods/digital-speedometer',
         'mods/ambient-lighting',
-        'mods/exhaust-burble',
-        'mods/start-stop-memory',
         'mods/driving-modes',
       ],
     },

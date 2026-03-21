@@ -55,7 +55,7 @@ export default function Home() {
           />
           <Feature
             title="Popular Mods"
-            description="Step-by-step walkthroughs for digital speedometer, ambient lighting, exhaust burble, and more."
+            description="Step-by-step walkthroughs for digital speedometer, ambient lighting, driving modes, and more."
             link="/docs/mods/digital-speedometer"
           />
         </div>

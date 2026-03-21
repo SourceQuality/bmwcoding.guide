@@ -23,7 +23,7 @@ BMW coding is generally safe when done correctly, but careless changes can cause
 | Warning lights on dash | Incorrect BDC or KOMBI coding | Restore backup, recode |
 | Module not responding | Interrupted during coding | Retry coding; worst case, dealer reset |
 | Feature doesn't work | Changed display setting but hardware not present | Revert the change |
-| Car won't start | Extremely rare — DME miscoding | Restore DME backup via E-Sys |
+| Car won't start | Extremely rare — critical module miscoding | Restore backup via E-Sys |
 
 ## Risk Levels
 
@@ -32,7 +32,7 @@ BMW coding is generally safe when done correctly, but careless changes can cause
 | **Very Low** | Digital speedometer, fold mirrors on lock, start-stop memory |
 | **Low** | Ambient lighting, display changes, needle sweep |
 | **Medium** | Exhaust burble, driving mode defaults, video in motion |
-| **High** | DME power parameters, air suspension, xDrive torque split |
+| **High** | Air suspension, xDrive torque split |
 | **Do Not Touch** | Airbag modules, ABS/DSC calibration, ADAS sensor coding |
 
 ## Warranty

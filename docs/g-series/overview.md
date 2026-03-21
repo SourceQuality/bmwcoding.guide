@@ -51,7 +51,6 @@ The head unit determines what coding options are available and which tool versio
 |--------|-------------|----------|
 | Head Unit | HU_MGU / HU_MGU2 | Infotainment, display settings |
 | Body Domain Controller | BDC | Lighting, locking, comfort |
-| Digital Motor Electronics | DME | Engine management |
 | Instrument Cluster | KOMBI | Gauges, digital speedo |
 | Advanced Driver Assistance | KAFAS2 | Camera-based driver assist |
 | Seat Module | SITZM | Seat memory, comfort features |
