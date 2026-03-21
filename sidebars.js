@@ -32,6 +32,7 @@ const sidebars = {
         'mods/digital-speedometer',
         'mods/ambient-lighting',
         'mods/anti-dazzle',
+        'mods/ece-tail-lights',
         'mods/driving-modes',
       ],
     },
