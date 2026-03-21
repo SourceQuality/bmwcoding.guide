@@ -10,9 +10,10 @@ BimmerUtility is a Windows coding and diagnostics app for BMW vehicles. It gives
 
 ## What You Need
 
-- **Windows PC** (Windows 10 or later)
+- **Windows PC or iOS Device** (Windows 10 or later)
 - **ENET cable** - an Ethernet-to-OBD2 cable for a direct connection to the car
-- **BimmerUtility software** - download from the official BimmerUtility website
+- ** USB C to Ethernet Adapter** - If using an iOS device, or a laptop without an ethernet port.
+- **BimmerUtility software** - download from the official BimmerUtility website: https://www.bimmerutility.com/
 
 ## Supported Vehicles
 

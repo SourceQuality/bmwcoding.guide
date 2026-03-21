@@ -30,7 +30,7 @@ Your head unit determines what coding options you have and what tool versions yo
 ### MGU (ID6/ID7)
 - Found in G20, G30, G05, G80, G82
 - 10.25" or 12.3" center screen
-- Works with E-Sys and BimmerCode
+- Works with E-Sys, BimmerUtility and BimmerCode
 
 ### MGU2 (ID8/ID9, iDrive 8+)
 - Found in G70, G60, and newer LCI models

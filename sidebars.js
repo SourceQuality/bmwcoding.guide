@@ -31,6 +31,7 @@ const sidebars = {
       items: [
         'mods/digital-speedometer',
         'mods/ambient-lighting',
+        'mods/anti-dazzle',
         'mods/driving-modes',
       ],
     },
