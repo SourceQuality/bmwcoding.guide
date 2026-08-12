@@ -1,0 +1,178 @@
+---
+/**
+ * Override of Starlight's TableOfContents.
+ *
+ * Starlight's own component is rendered unchanged inside this wrapper, so the
+ * scroll tracking that sets aria-current stays Starlight's code. This file only
+ * draws the rail on top of it:
+ *
+ *   - a track path stepping right at each nesting level, joined by bezier elbows
+ *   - an accent path over the same geometry, revealed by stroke-dasharray so the
+ *     highlight slides along the track and follows the curves
+ *
+ * Geometry is measured from the rendered links, so it survives changes to
+ * Starlight's list markup as long as the links stay inside nested lists.
+ */
+import Default from '@astrojs/starlight/components/TableOfContents.astro';
+---
+
+<div class="toc-rail">
+  <svg class="toc-rail__svg" aria-hidden="true" fill="none">
+    <path class="toc-rail__track" stroke-width="2" stroke-linecap="round"></path>
+    <path class="toc-rail__active" stroke-width="2" stroke-linecap="round"></path>
+  </svg>
+  <Default><slot /></Default>
+</div>
+
+<script>
+  const INDENT = 16; // px the rail steps right per nesting level
+  // Minimum vertical travel for a curve. Normally the gap opened by the
+  // margin-block-start rules in theme.css is larger and wins; this only keeps the
+  // elbow from collapsing into a horizontal jog if those rules change.
+  const ELBOW = 8;
+
+  function setup(rail: HTMLElement) {
+    const svg = rail.querySelector<SVGSVGElement>('.toc-rail__svg');
+    const track = rail.querySelector<SVGPathElement>('.toc-rail__track');
+    const active = rail.querySelector<SVGPathElement>('.toc-rail__active');
+    const nav = rail.querySelector('starlight-toc nav');
+    if (!svg || !track || !active || !nav) return;
+
+    // Reused element for measuring prefix lengths. Kept in the document because
+    // getTotalLength() on a detached path is not reliable across engines.
+    const ruler = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    ruler.setAttribute('visibility', 'hidden');
+    svg.append(ruler);
+
+    let ready = false;
+
+    const depthOf = (link: Element) => {
+      let depth = -1;
+      for (let el = link.parentElement; el && nav.contains(el); el = el.parentElement) {
+        if (el.tagName === 'UL') depth++;
+      }
+      return Math.max(depth, 0);
+    };
+
+    function draw() {
+      const links = Array.from(nav!.querySelectorAll<HTMLAnchorElement>('a'));
+      if (!links.length) return;
+
+      const base = svg!.getBoundingClientRect();
+      // Segment list kept parallel to links: each link owns one vertical run,
+      // and a curve is inserted wherever the depth changes between two links.
+      const segments: string[] = [];
+      const ownSegment: number[] = [];
+
+      let prev: { x: number; y: number } | null = null;
+      let i = 0;
+
+      for (const link of links) {
+        const box = link.getBoundingClientRect();
+        const x = 1 + depthOf(link) * INDENT;
+        const top = box.top - base.top;
+        const bottom = box.bottom - base.top;
+
+        if (prev && Math.abs(prev.x - x) > 0.5) {
+          // Elbow: ease across to the new indent over the gap above this link.
+          const y0 = prev.y;
+          const y1 = Math.max(top, y0 + ELBOW);
+          const mid = y0 + (y1 - y0) / 2;
+          segments.push(`M ${prev.x} ${y0} C ${prev.x} ${mid}, ${x} ${mid}, ${x} ${y1}`);
+        } else if (prev) {
+          segments.push(`M ${x} ${prev.y} L ${x} ${top}`);
+        }
+
+        ownSegment[i++] = segments.length;
+        segments.push(`M ${x} ${top} L ${x} ${bottom}`);
+        prev = { x, y: bottom };
+      }
+
+      svg!.setAttribute('height', String(base.height));
+      svg!.setAttribute('width', String(base.width));
+      const d = segments.join(' ');
+      track!.setAttribute('d', d);
+      active!.setAttribute('d', d);
+
+      const lengthTo = (count: number) => {
+        if (count <= 0) return 0;
+        ruler.setAttribute('d', segments.slice(0, count).join(' '));
+        return ruler.getTotalLength();
+      };
+
+      const total = lengthTo(segments.length);
+      const current = links.findIndex((a) => a.getAttribute('aria-current') === 'true');
+
+      if (current < 0) {
+        active!.style.strokeDasharray = `0 ${total}`;
+        active!.style.opacity = '0';
+        return;
+      }
+
+      const index = ownSegment[current]!;
+      const start = lengthTo(index);
+      const end = lengthTo(index + 1);
+
+      active!.style.strokeDasharray = `${Math.max(end - start, 0)} ${total}`;
+      active!.style.strokeDashoffset = `${-start}`;
+      active!.style.opacity = '1';
+
+      if (!ready) {
+        // Let the first paint land before enabling the slide, so the highlight
+        // does not animate in from the top of the page on load.
+        requestAnimationFrame(() => {
+          rail.dataset.ready = 'true';
+          ready = true;
+        });
+      }
+    }
+
+    draw();
+
+    new MutationObserver(draw).observe(nav, {
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['aria-current'],
+    });
+
+    if ('ResizeObserver' in window) new ResizeObserver(draw).observe(rail);
+    window.addEventListener('load', draw);
+  }
+
+  document.querySelectorAll<HTMLElement>('.toc-rail').forEach(setup);
+</script>
+
+<style>
+  .toc-rail {
+    position: relative;
+  }
+
+  .toc-rail__svg {
+    position: absolute;
+    inset: 0;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .toc-rail__track {
+    stroke: var(--sl-color-hairline-light);
+  }
+
+  .toc-rail__active {
+    stroke: var(--toc-rail-accent);
+    opacity: 0;
+  }
+
+  .toc-rail[data-ready='true'] .toc-rail__active {
+    transition:
+      stroke-dasharray 0.3s cubic-bezier(0.32, 0.72, 0, 1),
+      stroke-dashoffset 0.3s cubic-bezier(0.32, 0.72, 0, 1),
+      opacity 0.2s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .toc-rail[data-ready='true'] .toc-rail__active {
+      transition: opacity 0.2s ease;
+    }
+  }
+</style>

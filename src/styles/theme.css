@@ -1,0 +1,117 @@
+/*
+ * Motorsport tri-stripe theme.
+ *
+ * Stripe values: #81C4FF light blue, #16588E dark blue, #E7222E red.
+ * Used as colour only. No roundel, no M logo, no BMW wordmark.
+ *
+ * These rules are deliberately unlayered. Starlight defines its tokens inside
+ * @layer starlight.base, and unlayered CSS beats any layered rule regardless of
+ * specificity, so both the dark (:root) and light ([data-theme='light']) blocks
+ * below must be defined here or the light theme inherits the dark accent.
+ */
+
+:root {
+  --stripe-blue-light: #81c4ff;
+  --stripe-blue-dark: #16588e;
+  --stripe-red: #e7222e;
+  --stripe-gradient: linear-gradient(
+    90deg,
+    var(--stripe-blue-light) 0 33.333%,
+    var(--stripe-blue-dark) 33.333% 66.666%,
+    var(--stripe-red) 66.666% 100%
+  );
+}
+
+/* Dark theme. text-accent resolves to accent-high, so that carries the light blue. */
+:root,
+::backdrop {
+  --sl-color-accent-low: #0b2f4f;
+  --sl-color-accent: #16588e;
+  --sl-color-accent-high: #81c4ff;
+}
+
+/* Light theme. text-accent resolves to accent, so that carries the dark blue. */
+:root[data-theme='light'],
+[data-theme='light'] ::backdrop {
+  --sl-color-accent-low: #d8e8f7;
+  --sl-color-accent: #16588e;
+  --sl-color-accent-high: #0d3c63;
+}
+
+/*
+ * Tri-stripe under the site header.
+ * Scoped to the <header> element: Starlight nests a div.header inside it, and a
+ * bare .header selector would paint the stripe twice.
+ */
+header.header {
+  border-bottom: 0;
+  position: relative;
+}
+
+header.header::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--stripe-gradient);
+}
+
+/*
+ * Right-hand "On this page" rail.
+ *
+ * The rail itself is drawn as SVG by src/components/TableOfContents.astro, which
+ * measures the rendered links. The rules here only set the colour it strokes and
+ * open up the vertical gaps the elbow curves need at each change of depth.
+ * Starlight still owns the scroll tracking that sets aria-current.
+ */
+:root {
+  --toc-rail-accent: var(--stripe-blue-light);
+}
+
+:root[data-theme='light'] {
+  --toc-rail-accent: var(--stripe-blue-dark);
+}
+
+starlight-toc nav h2 {
+  font-size: var(--sl-text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sl-color-gray-3);
+}
+
+starlight-toc nav a {
+  color: var(--sl-color-gray-3);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+starlight-toc nav a:hover {
+  color: var(--sl-color-white);
+}
+
+starlight-toc nav a[aria-current='true'] {
+  color: var(--sl-color-text-accent);
+  font-weight: 600;
+}
+
+/* Room for an elbow where the rail steps in, and again where it steps back out. */
+starlight-toc nav ul ul > li:first-child,
+starlight-toc nav li:has(ul) + li {
+  margin-block-start: 8px;
+}
+
+/* The mobile table of contents is a dropdown, not a rail. Leave it alone. */
+starlight-toc nav .isMobile,
+starlight-toc nav .isMobile a {
+  margin-block-start: 0;
+}
+
+/* Splash hero title picks up the stripe. */
+.hero h1 {
+  padding-block-end: 0.5rem;
+  border-bottom: 3px solid transparent;
+  border-image: var(--stripe-gradient) 1;
+  border-inline: 0;
+  border-block-start: 0;
+}

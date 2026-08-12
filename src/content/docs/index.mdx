@@ -1,0 +1,39 @@
+---
+title: BMW Coding Guide
+description: Community-maintained BMW coding guides, curated from forum threads and tool documentation.
+template: splash
+hero:
+  tagline: Coding guides for G series BMWs, with every procedure traced back to its source.
+  actions:
+    - text: Contribute a guide
+      link: https://github.com/SourceQuality/bmwcoding.guide
+      icon: external
+      variant: primary
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid>
+  <Card title="Sourced, not invented" icon="approve-check">
+    Every guide cites the thread or documentation it came from. Module names, codes,
+    and values are never inferred.
+  </Card>
+  <Card title="Chassis specific" icon="setting">
+    Procedures record the exact chassis, build, and head unit they were verified on.
+    Nothing is generalized across models.
+  </Card>
+  <Card title="Back up first" icon="warning">
+    Coding changes control module settings. Read the module and save a backup before
+    you change anything.
+  </Card>
+  <Card title="Open to edits" icon="pencil">
+    Pages live as Markdown in the repository. Corrections go through pull requests.
+  </Card>
+</CardGrid>
+
+:::note
+The guides are being rebuilt. Pages return as their sources are re-checked.
+:::
+
+This site is community-maintained and is not affiliated with, endorsed by, or sponsored
+by BMW AG.
