@@ -43,9 +43,15 @@
  * Scoped to the <header> element: Starlight nests a div.header inside it, and a
  * bare .header selector would paint the stripe twice.
  */
+/*
+ * Do not set `position` here. Starlight fixes the header to the top and offsets
+ * the sidebar by --sl-nav-height to match. An unlayered `position: relative`
+ * would beat that layered rule, and the header would scroll away while the
+ * sidebar kept reserving space for it. A fixed element already anchors an
+ * absolutely positioned ::after, so the stripe needs nothing here.
+ */
 header.header {
   border-bottom: 0;
-  position: relative;
 }
 
 header.header::after {
