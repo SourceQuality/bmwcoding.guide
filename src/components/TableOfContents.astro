@@ -59,60 +59,75 @@ import Default from '@astrojs/starlight/components/TableOfContents.astro';
       if (!links.length) return;
 
       const base = svg!.getBoundingClientRect();
-      // Segment list kept parallel to links: each link owns one vertical run,
-      // and a curve is inserted wherever the depth changes between two links.
-      const segments: string[] = [];
-      const ownSegment: number[] = [];
 
-      let prev: { x: number; y: number } | null = null;
-      let i = 0;
+      // The rail must be ONE continuous subpath. A dash pattern restarts at every
+      // M command, so a rail built from several subpaths cannot be addressed by
+      // stroke-dasharray: each piece would restart the pattern and paint itself.
+      // Only cmds[0] is an M; everything after it is L or C.
+      const cmds: string[] = [];
+      // Where each link's own vertical run starts and ends, as indices into cmds.
+      const runs: Array<[number, number]> = [];
+
+      let cursor: { x: number; y: number } | null = null;
 
       for (const link of links) {
         const box = link.getBoundingClientRect();
         const x = 1 + depthOf(link) * INDENT;
         const top = box.top - base.top;
-        const bottom = box.bottom - base.top;
 
-        if (prev && Math.abs(prev.x - x) > 0.5) {
-          // Elbow: ease across to the new indent over the gap above this link.
-          const y0 = prev.y;
-          const y1 = Math.max(top, y0 + ELBOW);
-          const mid = y0 + (y1 - y0) / 2;
-          segments.push(`M ${prev.x} ${y0} C ${prev.x} ${mid}, ${x} ${mid}, ${x} ${y1}`);
-        } else if (prev) {
-          segments.push(`M ${x} ${prev.y} L ${x} ${top}`);
+        if (!cursor) {
+          cmds.push(`M ${x} ${top}`);
+        } else if (Math.abs(cursor.x - x) > 0.5) {
+          // Elbow: ease across to the new indent through the gap above this link.
+          const corner = Math.max(top, cursor.y + ELBOW);
+          const mid = cursor.y + (corner - cursor.y) / 2;
+          cmds.push(`C ${cursor.x} ${mid}, ${x} ${mid}, ${x} ${corner}`);
+          if (top > corner) cmds.push(`L ${x} ${top}`);
+        } else if (top > cursor.y) {
+          cmds.push(`L ${x} ${top}`);
         }
 
-        ownSegment[i++] = segments.length;
-        segments.push(`M ${x} ${top} L ${x} ${bottom}`);
-        prev = { x, y: bottom };
+        const from = cmds.length;
+        const bottom = Math.max(box.bottom - base.top, top);
+        cmds.push(`L ${x} ${bottom}`);
+        runs.push([from, cmds.length]);
+        cursor = { x, y: bottom };
       }
 
-      svg!.setAttribute('height', String(base.height));
-      svg!.setAttribute('width', String(base.width));
-      const d = segments.join(' ');
+      const d = cmds.join(' ');
       track!.setAttribute('d', d);
       active!.setAttribute('d', d);
 
+      // Length along the rail after the first `count` commands.
       const lengthTo = (count: number) => {
-        if (count <= 0) return 0;
-        ruler.setAttribute('d', segments.slice(0, count).join(' '));
+        if (count <= 1) return 0;
+        ruler.setAttribute('d', cmds.slice(0, count).join(' '));
         return ruler.getTotalLength();
       };
 
-      const total = lengthTo(segments.length);
-      const current = links.findIndex((a) => a.getAttribute('aria-current') === 'true');
+      const total = lengthTo(cmds.length);
+      // Starlight marks nothing current until a heading crosses its observer band,
+      // so at the top of a page no link carries aria-current. Fall back to the
+      // first link there, otherwise the rail reads as dead on arrival.
+      const marked = links.findIndex((a) => a.getAttribute('aria-current') === 'true');
+      const run = runs[marked < 0 ? 0 : marked];
 
-      if (current < 0) {
-        active!.style.strokeDasharray = `0 ${total}`;
+      // Mark the fallback so its label matches the rail. Only aria-current is
+      // observed, so writing this attribute cannot retrigger the observer.
+      for (const link of links) link.removeAttribute('data-toc-lead');
+      if (marked < 0) links[0]?.setAttribute('data-toc-lead', 'true');
+
+      if (!run) {
         active!.style.opacity = '0';
         return;
       }
 
-      const index = ownSegment[current]!;
-      const start = lengthTo(index);
-      const end = lengthTo(index + 1);
+      const start = lengthTo(run[0]);
+      const end = lengthTo(run[1]);
 
+      // One dash the length of the active run, then a gap longer than the whole
+      // rail so the pattern cannot repeat. The negative offset slides that dash
+      // along to where the run begins.
       active!.style.strokeDasharray = `${Math.max(end - start, 0)} ${total}`;
       active!.style.strokeDashoffset = `${-start}`;
       active!.style.opacity = '1';

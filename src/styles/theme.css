@@ -90,7 +90,8 @@ starlight-toc nav a:hover {
   color: var(--sl-color-white);
 }
 
-starlight-toc nav a[aria-current='true'] {
+starlight-toc nav a[aria-current='true'],
+starlight-toc nav a[data-toc-lead='true'] {
   color: var(--sl-color-text-accent);
   font-weight: 600;
 }

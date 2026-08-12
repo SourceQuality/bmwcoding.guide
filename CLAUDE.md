@@ -63,6 +63,10 @@ Node version is not pinned. There is no `.nvmrc` and no `engines` field. `TODO: 
   attribute triggers a redraw. Do not reimplement scroll tracking. The elbow gaps come from the
   `margin-block-start` rules in `theme.css`; changing them changes where the curves land.
   Re-check this override after a Starlight upgrade.
+  Two constraints are easy to break. The rail must stay a single subpath, because a dash pattern
+  restarts at every `M` command: split it and every piece repaints the pattern, which lights the
+  whole rail at once. Starlight also leaves `aria-current` unset until a heading crosses its
+  observer band, so the component falls back to the first link at the top of a page.
 - **Static assets**: no `public/` directory and no favicon yet. `TODO: not yet in repo`.
 
 ## Theming
