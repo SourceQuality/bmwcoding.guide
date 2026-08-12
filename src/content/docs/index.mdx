@@ -3,7 +3,7 @@ title: BMW Coding Guide
 description: Community-maintained BMW coding guides, curated from forum threads and tool documentation.
 template: splash
 hero:
-  tagline: Coding guides for G series BMWs, with every procedure traced back to its source.
+  tagline: Coding guides for G series BMWs. Every procedure links back to the thread it came from.
   actions:
     - text: Contribute a guide
       link: https://github.com/SourceQuality/bmwcoding.guide
@@ -14,26 +14,25 @@ hero:
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
 <CardGrid>
-  <Card title="Sourced, not invented" icon="approve-check">
-    Every guide cites the thread or documentation it came from. Module names, codes,
-    and values are never inferred.
+  <Card title="Every value has a source" icon="approve-check">
+    Guides link the thread or documentation they came from. If a value is not in the
+    source, it does not go on the page.
   </Card>
-  <Card title="Chassis specific" icon="setting">
-    Procedures record the exact chassis, build, and head unit they were verified on.
-    Nothing is generalized across models.
+  <Card title="Written for one car" icon="setting">
+    A guide names the chassis, build, and head unit its source used, and claims nothing
+    past that.
   </Card>
-  <Card title="Back up first" icon="warning">
-    Coding changes control module settings. Read the module and save a backup before
-    you change anything.
+  <Card title="Back up before you code" icon="warning">
+    Coding changes control module settings. Read the module and save a backup first.
   </Card>
-  <Card title="Open to edits" icon="pencil">
-    Pages live as Markdown in the repository. Corrections go through pull requests.
+  <Card title="Fix what looks wrong" icon="pencil">
+    Pages are Markdown in a public repository. Send a pull request.
   </Card>
 </CardGrid>
 
 :::note
-The guides are being rebuilt. Pages return as their sources are re-checked.
+We are rebuilding the guides. A page goes back up once someone re-checks its source.
 :::
 
-This site is community-maintained and is not affiliated with, endorsed by, or sponsored
+The community maintains this site. It is not affiliated with, endorsed by, or sponsored
 by BMW AG.
